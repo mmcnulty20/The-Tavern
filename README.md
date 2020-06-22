@@ -10,7 +10,7 @@ The Tavern can supplement a night of relaxing, drinking, and bonding in or out o
 
 ------
 
-## MVPs
+### MVPs
 
 1) Users can start and quit a game
 2) Users may select a minigame to begin
@@ -43,7 +43,7 @@ NOTE-THE-SECOND: Scores do not persist, as this game is meant to be active fun w
 
 -----
 
-## Wireframe
+### Wireframe
 
 ![this is text](./resources/wireframe.png)
 
@@ -55,7 +55,7 @@ NOTE-THE-SECOND: Scores do not persist, as this game is meant to be active fun w
 
 ---
 
-## Architecture and Technology
+### Architecture and Technology
 
 * `JavaScript` - game environment/DOM manipulation
 * `Node.js` - Framework

@@ -1,6 +1,7 @@
-import { modal, rectButton } from "./utils/canvas_utils"
+import { modal, rectButton, clearWithHUD } from "./utils/canvas_utils"
 import chooseGame from "./choose_game";
 const welcomeScreen = (canv, ctx) => {
+    clearWithHUD(canv, ctx);
     modal(ctx)
     
     ctx.textAlign = "center"
@@ -18,7 +19,7 @@ const welcomeScreen = (canv, ctx) => {
 }
 
 const settingExplanation = ( canv, ctx ) => () => {
-    ctx.clearRect(0, 0, 800, 500);
+    clearWithHUD(canv, ctx);
     modal(ctx)
 
     // Replace with pixel-drawn box eventually

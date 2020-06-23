@@ -1,7 +1,9 @@
-import { modal, rectButton } from "./utils/canvas_utils"
+import { modal, rectButton, clearWithHUD } from "./utils/canvas_utils"
+import pigInstructions from "./pig/instructions";
+
 
 const chooseGame = (canv, ctx) => {
-    ctx.clearRect(0, 0, 800, 500);
+    clearWithHUD(canv, ctx);
     modal(ctx)
 
     ctx.beginPath();
@@ -14,7 +16,7 @@ const chooseGame = (canv, ctx) => {
     ctx.textAlign = "center";
     ctx.fillText("What would you like to play?", 400, 100)
 
-    const pig = new rectButton(canv, () => console.log("playing pig"), {
+    const pigButton = new rectButton(canv, () => pigInstructions(canv, ctx), {
         name: "pig-btn",
         x: 325,
         y: 120,
@@ -24,8 +26,8 @@ const chooseGame = (canv, ctx) => {
         buttonText: "Pig",
         textColor: "white"
     })
-    pig.render();
-    canv.addEventListener("click", pig.clicked );
+    pigButton.render();
+    canv.addEventListener("click", pigButton.clicked );
 }
 
 export default chooseGame;

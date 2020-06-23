@@ -1,7 +1,17 @@
+import HUD from "../hud";
+import Player from "../player/humanPlayer";
+let playerHUD 
+
 export const modal = ctx => {
     ctx.fillStyle = "rgba(0,0,0,0.7)"
     ctx.fillRect(0, 0, 800, 500)
     //cover background with darker box, emphasizing foreground menu
+}
+
+export const clearWithHUD = (canv, ctx) => {
+    ctx.clearRect(0, 0, 800, 500);
+    playerHUD = playerHUD || new HUD(canv, new Player(sessionStorage.getItem("player")), 2)
+    playerHUD.render()
 }
 
 export class rectButton {

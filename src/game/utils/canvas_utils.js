@@ -1,0 +1,65 @@
+export const modal = ctx => {
+    ctx.fillStyle = "rgba(0,0,0,0.7)"
+    ctx.fillRect(0, 0, 800, 500)
+    //cover background with darker box, emphasizing foreground menu
+}
+
+export class rectButton {
+    constructor(canv, onClick, { name, x, y, w, h, fill, strokeColor, strokeWidth, noStroke = true, buttonText, textColor, font } ) {
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.fill = fill;
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.noStroke = noStroke;
+        
+        
+        this.canv = canv
+        this.onClick = onClick
+        
+        this.buttonText = buttonText;
+        this.font = font
+        this.textColor = textColor || "black";
+
+        this.clicked = this.clicked.bind(this)
+    }
+
+    render(){
+        const ctx = this.canv.getContext("2d")
+        ctx.save();
+        ctx.beginPath();
+        if (this.fill) ctx.fillStyle=this.fill;
+        if (this.fill) ctx.strokeStyle=this.strokeColor;
+        if (this.strokeWidth) ctx.lineWidth=this.strokewidth;
+        ctx.rect(this.x, this.y, this.w, this.h);
+        if ( !this.noStroke ) ctx.stroke();
+        ctx.fill();
+
+        if (this.buttonText) {
+            ctx.fillStyle = this.textColor
+            ctx.fillText()
+        }
+        
+        ctx.restore();
+    }
+
+    mouseInside(x,y){
+        return (
+            ( x > this.x && x < (this.x + this.w) ) &&
+            (  y > this.y && y < (this.y + this.h) )
+        )
+    }
+
+    clicked(e){
+        const bounds = this.canv.getBoundingClientRect();
+
+        const mouseXPos = e.clientX - bounds.x;
+        const mouseYPos = e.clientY - bounds.y;
+        if (this.mouseInside(mouseXPos, mouseYPos)) {
+            this.onClick();
+        }
+    }
+}

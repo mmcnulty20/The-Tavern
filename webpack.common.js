@@ -50,8 +50,8 @@ module: {
             // you can specify a publicPath here
             // by default it uses publicPath in webpackOptions.output
             name: "[name].[ext]",
-            outputPath: "images/",
-            publicPath: "images/"
+            outputPath: "resources/pixel_assets",
+            publicPath: "resources/pixel_assets"
             }
         }
         ]

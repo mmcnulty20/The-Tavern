@@ -23,8 +23,9 @@ export class rectButton {
         this.buttonText = buttonText;
         this.font = font
         this.textColor = textColor || "black";
-
+        
         this.clicked = this.clicked.bind(this)
+        console.log(this)
     }
 
     render(){
@@ -39,8 +40,10 @@ export class rectButton {
         ctx.fill();
 
         if (this.buttonText) {
-            ctx.fillStyle = this.textColor
-            ctx.fillText()
+            ctx.fillStyle = this.textColor;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(this.buttonText, (this.x + ( this.w / 2 )), (this.y + ( this.h / 2 )) )
         }
         
         ctx.restore();

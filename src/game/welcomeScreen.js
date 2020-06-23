@@ -1,4 +1,5 @@
 import { modal, rectButton } from "./utils/canvas_utils"
+import chooseGame from "./choose_game";
 const welcomeScreen = (canv, ctx) => {
     modal(ctx)
     
@@ -55,9 +56,18 @@ const settingExplanation = ( canv, ctx ) => () => {
     ctx.textAlign = "center"
     explText.forEach( (str, i) => ctx.fillText(str, 400, 275 + ( i * 20 )) );
 
-    const buttonTest = new rectButton(canv, () => alert("clicked!"), "test", 100, 100, 100, 50, "blue", "orange")
+    const buttonTest = new rectButton(canv, () => chooseGame(canv, ctx), {
+        name: "test",
+        x: 350,
+        y: 325,
+        w: 100,
+        h: 50,
+        fill: "blue",
+        buttonText: "Click me",
+        textColor: "white"
+    })
     buttonTest.render()
-    canv.addEventListener("click", buttonTest.clicked );
+    canv.addEventListener("click", buttonTest.clicked, {once: true} );
 }
 
 export default welcomeScreen;

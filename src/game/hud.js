@@ -20,6 +20,7 @@ class HUD {
     }
 
     render(){
+    // render(player){
         const ctx = this.ctx;
 
         ctx.fillStyle = "white";
@@ -27,6 +28,12 @@ class HUD {
         ctx.textAlign = "center";
         ctx.font = "20px Georgia"
         ctx.fillText(this.numPlayers, 30, 30)
+
+        // if (player) {
+        //     ctx.textAlign = "left";
+        //     ctx.fillText(player, 70, 30);
+        //     ctx.textAlign = "center";
+        // }
         
         ctx.fillRect(262.5,10,275,30);
 

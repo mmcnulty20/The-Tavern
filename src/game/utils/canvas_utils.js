@@ -8,10 +8,10 @@ export const modal = ctx => {
     //cover background with darker box, emphasizing foreground menu
 }
 
-export const clearWithHUD = (canv, ctx) => {
+export const clearWithHUD = (canv, ctx, player) => {
     ctx.clearRect(0, 0, 800, 500);
-    playerHUD = playerHUD || new HUD(canv, new Player(sessionStorage.getItem("player")), 2)
-    playerHUD.render()
+    playerHUD = playerHUD || new HUD(canv, new Player(JSON.parse(sessionStorage.getItem("player"))), 2)
+    playerHUD.render(player)
 }
 
 export class rectButton {
@@ -38,12 +38,13 @@ export class rectButton {
         console.log(this)
     }
 
-    render(){
+    render(bgColorChange){
         const ctx = this.canv.getContext("2d")
         ctx.save();
         ctx.beginPath();
-        if (this.fill) ctx.fillStyle=this.fill;
-        if (this.fill) ctx.strokeStyle=this.strokeColor;
+        if (this.fill) ctx.fillStyle = this.fill;
+        if (bgColorChange) ctx.fillStyle = bgColorChange;
+        if (this.strokeColor) ctx.strokeStyle=this.strokeColor;
         if (this.strokeWidth) ctx.lineWidth=this.strokewidth;
         ctx.rect(this.x, this.y, this.w, this.h);
         if ( !this.noStroke ) ctx.stroke();

@@ -1,5 +1,6 @@
 class Player {
-    constructor(name = "anonymous", health = 100 ) {
+    constructor({ color, name = "anonymous", health = 100 }) {
+        this.color = color;
         this.name = name;
         this.health = health;
         this.points = 0

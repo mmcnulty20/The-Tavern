@@ -2,7 +2,7 @@ import welcomeScreen from "./welcomeScreen";
 import { modal } from "./utils/canvas_utils";
 
 const chooseName = (canv, ctx) => {
-    if (!window.sessionStorage.player) {
+    if (!sessionStorage.getItem("player")) {
         modal(ctx)
         
         // Replace with pixel-drawn box eventually
@@ -23,3 +23,10 @@ const chooseName = (canv, ctx) => {
 }
 
 export default chooseName
+
+// arr = [{ state: "NY" }, { state: "CA" }, { state: "NY" },{ state: "NY" },{ state: "CA" },{ state: "MI" }]
+// counts = {NY: 0, CA: 0, MI: 0}
+// arr.forEach(obj => {
+//     // counts[obj.state] = counts[obj.state] ? counts[obj.state] + 1 : 1
+//     counts[obj.state] += 1
+// })

@@ -2,6 +2,8 @@ import HUD from "../hud";
 import Player from "../player/humanPlayer";
 let playerHUD 
 
+export let thisPlayer;
+
 export const modal = ctx => {
     ctx.fillStyle = "rgba(0,0,0,0.7)"
     ctx.fillRect(0, 0, 800, 500)
@@ -10,7 +12,8 @@ export const modal = ctx => {
 
 export const clearWithHUD = (canv, ctx, player) => {
     ctx.clearRect(0, 0, 800, 500);
-    playerHUD = playerHUD || new HUD(canv, new Player(JSON.parse(sessionStorage.getItem("player"))), 2)
+    thisPlayer = thisPlayer || new Player(JSON.parse(sessionStorage.getItem("player")))
+    playerHUD = playerHUD || new HUD(canv, thisPlayer, 2)
     playerHUD.render(player)
 }
 

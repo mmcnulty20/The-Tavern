@@ -1,10 +1,10 @@
-import { clearWithHUD } from "../utils/canvas_utils";
+import { clearWithHUD, thisPlayer } from "../utils/canvas_utils";
 import pig from "./pig-game";
 
 const pigDisplay = (canv, ctx) => {
 
     clearWithHUD(canv, ctx);
-    const game = new pig(canv, ctx, [  JSON.parse(sessionStorage.getItem("player")) ])
+    const game = new pig(canv, ctx, [  thisPlayer ])
     game.play();
 }
 

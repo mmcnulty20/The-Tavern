@@ -24,13 +24,10 @@ class pig {
 
         this.user = JSON.parse(sessionStorage.getItem("player")).name;
         this.user = this.playerOrder.find( player => player.name === this.user)
-        this.scores = [];
+        this.scores = new Array(this.numPlayers).fill(0);
 
         this.numRolls = 0;
         this.tempScore = 0;
-    }
-
-    useLoadImages(){
     }
 
     switchPlayers(){
@@ -67,14 +64,48 @@ class pig {
         }
     }
 
-    endTurn(score){
+    endTurn(){
+        this.scores[this.currentPlayerIndex] += this.tempScore;
+        this.tempScore = 0;
+        this.numRolls = 0;
+        this.currentPlayer = null;
+        this.render();
+        setTimeout( () => {
+            this.switchPlayers();
+            this.render()
+            this.playTurn();
+        }, 750)
 
     }
 
+    handleOne(){
+        this.tempScore === 0;
+        this.currentPlayer.earnPoints(this.numRolls);
+        this.endTurn(1)
+    }
+
     turn(){
+        console.log("rolling")
+        console.log("--")
+        this.numRolls += 1;
         const roll = this.roll()
-        this.ctx.beginPath();
+        if (roll === 1) {
+            this.handleOne();
+        } else {
+            this.tempScore += roll;
+        }
         this.render(roll)
+        return roll !== 1
+    }
+
+    roboTurn() {
+        setTimeout( () => {
+            if ( this.tempScore < 15 ) {
+                if ( this.turn() ) this.roboTurn();
+            } else {
+                this.endTurn();
+            }
+        }, 750 )
     }
 
     render(result){
@@ -97,27 +128,35 @@ class pig {
         this.ctx.closePath();
         ctx.fill();
         ctx.stroke();
+        if ( this.currentPlayer !== null ) {
+            this.lastRoll = this.face(result)
+        }
 
         this.rollBtn.render(this.btnColor());
         this.holdBtn.render(this.btnColor())
         ctx.beginPath();
-        const face = this.face(result)
-        if ( imagesStore[face] ) {
-            this.diceRender(imagesStore[face])
-        } else {
-            loadImages( this.sources, (name, img) => {
-                if ( name === face ) this.diceRender(img)
-            })
+        console.log(result)
+        if (result || this.currentPlayer === null) {
+            let face = this.face(result) || this.lastRoll;
+            if ( imagesStore[face] ) {
+                this.diceRender(imagesStore[face])
+            } else {
+                loadImages( this.sources, (name, img) => {
+                    if ( name === face ) this.diceRender(img)
+                })
+            }
         }
         this.ctx.closePath();
         ctx.lineWidth = 1
 
-
+        ctx.fillText(`Current: ${this.tempScore}`, 400, 400)
+        ctx.fillText(`Your total: ${ this.scores[this.currentPlayerIndex] }`, 400, 425)
+        ctx.fillText(`Other's score: ${ this.scores[this.currentPlayerIndex === 0 ? 1 : 0] }`, 400, 450)
     }
 
     diceRender(img) {
         this.ctx.beginPath();
-        this.ctx.drawImage(img, 340, 150)
+        this.ctx.drawImage(img, 369, 181)
         this.ctx.closePath();
     }
 
@@ -138,7 +177,7 @@ class pig {
         })
         this.holdBtn = new rectButton(this.canv, () => {
             if ( this.user === this.currentPlayer ) {
-                console.log("holding")
+                this.endTurn();
             } else { console.log("not your turn") }
         }, {
             name: "hold",
@@ -154,8 +193,21 @@ class pig {
         this.canv.addEventListener("click", this.holdBtn.clicked);
 
         this.sources = { one, two, three, four, five, six };
-
         this.render();
+        this.playTurn();
+
+    }
+
+    playTurn(){
+        if ( !this.gameOver() ) {
+            if ( this.currentPlayer instanceof pigAi ) {
+                this.roboTurn();
+            }
+        }
+    }
+
+    gameOver(){
+        !!this.scores.find( score => score >= 100 )
     }
 
 }

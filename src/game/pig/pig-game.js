@@ -79,14 +79,12 @@ class pig {
     }
 
     handleOne(){
-        this.tempScore === 0;
+        this.tempScore = 0;
         this.currentPlayer.earnPoints(this.numRolls);
         this.endTurn(1)
     }
 
     turn(){
-        console.log("rolling")
-        console.log("--")
         this.numRolls += 1;
         const roll = this.roll()
         if (roll === 1) {
@@ -108,7 +106,7 @@ class pig {
         }, 750 )
     }
 
-    render(result){
+    render(result, winner){
         const ctx = this.ctx;
         clearWithHUD(this.canv, ctx);
         
@@ -135,7 +133,6 @@ class pig {
         this.rollBtn.render(this.btnColor());
         this.holdBtn.render(this.btnColor())
         ctx.beginPath();
-        console.log(result)
         if (result || this.currentPlayer === null) {
             let face = this.face(result) || this.lastRoll;
             if ( imagesStore[face] ) {
@@ -148,10 +145,13 @@ class pig {
         }
         this.ctx.closePath();
         ctx.lineWidth = 1
-
-        ctx.fillText(`Current: ${this.tempScore}`, 400, 400)
-        ctx.fillText(`Your total: ${ this.scores[this.currentPlayerIndex] }`, 400, 425)
-        ctx.fillText(`Other's score: ${ this.scores[this.currentPlayerIndex === 0 ? 1 : 0] }`, 400, 450)
+        if ( winner ) {
+            ctx.fillText(`${winner.name} wins!!`, 400, 425)
+        } else {
+            ctx.fillText(`Current: ${this.tempScore}`, 400, 400)
+            ctx.fillText(`Your total: ${ this.scores[this.currentPlayerIndex] }`, 400, 425)
+            ctx.fillText(`Other's score: ${ this.scores[this.currentPlayerIndex === 0 ? 1 : 0] }`, 400, 450)
+        }
     }
 
     diceRender(img) {
@@ -203,11 +203,26 @@ class pig {
             if ( this.currentPlayer instanceof pigAi ) {
                 this.roboTurn();
             }
+        } else {
+            this.win();
         }
     }
 
+    win(){
+        const idx = this.scores.findIndex( score => score >= 100 )
+        console.log(idx)
+        const winner = this.playerOrder[idx]
+        console.log(winner)
+        this.currentPlayer === null
+        this.render(undefined, winner)
+    }
+
     gameOver(){
-        !!this.scores.find( score => score >= 100 )
+        console.log(this.scores)
+        const test = this.scores.find( score => score >= 100 )
+        console.log(test)
+        console.log(!!test)
+        return !!test
     }
 
 }

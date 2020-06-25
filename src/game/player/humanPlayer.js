@@ -8,7 +8,7 @@ class Player {
 
     earnPoints(numPoints) {
         this.points += numPoints
-        this.health -= (numPoints * 5)
+        this.health -= (numPoints * 2)
     }
 
     lose(){

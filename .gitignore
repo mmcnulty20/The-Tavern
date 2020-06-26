@@ -1,6 +1,8 @@
 node_modules/
 package-lock.json
 main.js
+main.js.map
+main.css.map
 main.css
 notes.txt
 *.xcf

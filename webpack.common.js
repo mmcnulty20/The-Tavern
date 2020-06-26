@@ -8,7 +8,7 @@ entry: path.resolve(__dirname, "src", "index.js"), //
 output: {
     path: path.join(__dirname, outputDir),
     filename: "main.js",
-    publicPath: "/dist/"
+    publicPath: "/"
 },
 resolve: {
     extensions: [".js"] // if we were using React.js, we would include ".jsx"
@@ -86,8 +86,7 @@ plugins: [
     }),
     new HtmlWebpackPlugin({
         title: 'The Tavern',
-        template: "dist/index.html",
-        filename: "bundled_index.html",
+        template: "dist/base.html",
       }),
     require("autoprefixer")
 ]

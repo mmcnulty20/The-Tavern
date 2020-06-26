@@ -5,9 +5,9 @@ module.exports = merge(common, {
     mode: "development",
     devtool: "inline-source-map",
     devServer: {
-        contentBase: "./",
-        
+        contentBase: "./dist/",
+        port: 3000,
         watchContentBase: true,
-        open: "Google Chrome"
+        open: "google-chrome"
     }
 });

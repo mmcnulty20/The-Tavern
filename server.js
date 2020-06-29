@@ -63,6 +63,8 @@ setInterval( () => {
     }
 }, 100 )
 
-http.listen($PORT, () => {
+let PORT = process.env.PORT || 80
+
+http.listen(PORT, () => {
     
 })

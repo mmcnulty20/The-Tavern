@@ -24,7 +24,7 @@ app.use(webpackMiddleware( compiler,  {
 
 
 // app.get("/", (req, res) => {
-//     res.sendFile(__dirname + "/public/dist/index.html")
+//     res.sendFile(__dirname + "/dist/index.html")
 // });
 
 io.on("connection", socket => {

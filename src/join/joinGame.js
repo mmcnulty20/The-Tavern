@@ -1,7 +1,6 @@
 import Player from "../game/player/humanPlayer";
 import { connectedPlayers } from "../game/utils/server_utils";
 import setup from "../game/baseSetup";
-// import { socket } from "../../server";
 
 const joinGame = () => {
     const joinBtn = document.getElementById("join");

@@ -27,19 +27,24 @@ app.use(webpackMiddleware( compiler,  {
 //     res.sendFile(__dirname + "/public/dist/index.html")
 // });
 
-io.on("connection", localSocket => {
-    // socket = localSocket
-    localSocket.on("disconnect", () => {
-        delete gameState.players[localSocket.id]
+io.on("connection", socket => {
+    socket.on("disconnect", () => {
+        delete gameState.players[socket.id]
     })
-    localSocket.on("new player", ({name, color, textColor}) => {
-        gameState.players[localSocket.id] = { name, color, textColor } 
+    socket.on("new player", ({name, color, textColor}) => {
+        gameState.players[socket.id] = { name, color, textColor } 
     })
-    localSocket.on("ready", () => {
+    socket.on("ready", () => {
         ready += 1
     })
-    localSocket.on("shuffled order", order => {
+    socket.on("shuffled order", order => {
         playerOrder = order
+    })
+    socket.on("roll", roll => {
+        socket.broadcast.emit("roll", roll)
+    })
+    socket.on("hold", () => {
+        socket.broadcast.emit("hold")
     })
 })
 
@@ -59,5 +64,5 @@ setInterval( () => {
 }, 100 )
 
 http.listen(3000, () => {
-    console.log("listening on *:3000")
+    
 })

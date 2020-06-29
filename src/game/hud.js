@@ -37,16 +37,16 @@ class HUD {
         
         ctx.fillRect(262.5,10,275,30);
 
-        ctx.fillStyle = "red"
+        ctx.fillStyle = this.player.color
         ctx.fillRect(267.5, 15, ( this.player.percent() * 265 ), 20);
 
         ctx.fillStyle = "#ffffff7e";
         ctx.fillRect(675,5,60,25)
 
         ctx.font = "16px Georgia"
-        ctx.strokeText(this.player.name, 400, 29);
-        ctx.strokeText(this.player.points, 705, 22)
-        ctx.fillStyle = "white"
+        // ctx.strokeText(this.player.name, 400, 29);
+        // ctx.strokeText(this.player.points, 705, 22)
+        ctx.fillStyle = this.player.textColor
         ctx.fillText(this.player.name, 400, 29);
         ctx.fillText(this.player.points, 705, 22)
 

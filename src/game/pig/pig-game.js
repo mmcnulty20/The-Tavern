@@ -9,7 +9,6 @@ import pigAi from "../player/pigAi";
 import { clearWithHUD, rectButton, thisPlayer } from "../utils/canvas_utils";
 import { loadImages, imagesStore } from "../utils/loading_utils";
 import { connectedPlayers } from "../utils/server_utils";
-// import { socket } from "../../../server";
 
 class pig {
     constructor( canv, ctx ) {
@@ -23,7 +22,9 @@ class pig {
         this.numRolls = 0;
         this.tempScore = 0;
 
-        socket.on("hold", () => this.endTurn());
+        socket.on("hold", () => {
+            this.endTurn()
+        });
         socket.on("roll", roll => {
             this.turn(roll)
         })
@@ -84,19 +85,14 @@ class pig {
         this.endTurn(1)
     }
 
+    rollEvent(){
+        const roll = this.roll()
+        socket.emit("roll", roll)
+        this.turn(roll)
+    }
+
     turn(roll){
         this.numRolls += 1;
-        if (!roll) {
-            roll = this.roll()
-            // console.log(this.socket)
-            // console.log(this.socket.broadcast)
-            // debugger
-            console.log(socket)
-            console.log(Object.getOwnPropertyNames(socket.io))
-            
-            // io.sockets.sockets[socket.id].broadcast.emit("roll", roll)
-            // this.socket.broadcast.emit("roll", roll)
-        }
         if (roll === 1) {
             this.handleOne();
         } else {
@@ -109,7 +105,7 @@ class pig {
     roboTurn() {
         setTimeout( () => {
             if ( this.tempScore < 15 ) {
-                if ( this.turn() ) this.roboTurn();
+                if ( this.turn(this.roll()) ) this.roboTurn();
             } else {
                 this.endTurn();
             }
@@ -138,6 +134,7 @@ class pig {
         ctx.stroke();
         if ( this.currentPlayer !== null ) {
             this.lastRoll = this.face(result)
+            this.activePlayer = this.currentPlayer
         }
         if ( holding ) {
             this.rollBtn.render("grey");
@@ -160,13 +157,34 @@ class pig {
         this.ctx.closePath();
         ctx.lineWidth = 1
         if ( winner ) {
-            ctx.fillText(`${winner.name} wins!!`, 400, 425)
+            ctx.fillText(`${winner.name} wins!`, 400, 425)
         } else if ( holding ) {
             ctx.fillText(`Waiting for all players to join`, 400, 425);
         } else {
-            ctx.fillText(`Current: ${this.tempScore}`, 400, 400)
-            ctx.fillText(`Your total: ${ this.scores[this.currentPlayerIndex] }`, 400, 425)
-            ctx.fillText(`Other's score: ${ this.scores[this.currentPlayerIndex === 0 ? 1 : 0] }`, 400, 450)
+            ctx.textAlign = "center";
+            ctx.fillText(`Current: ${this.tempScore}`, 400, 420)
+            ctx.fillText(this.user.name, 190, 400)
+            ctx.fillText(this.scores[this.myIdx], 190, 440)
+            ctx.textAlign = "right"
+            ctx.fillText("Rolling Now", 700, 400)
+            ctx.fillStyle = this.activePlayer.textColor;
+            ctx.strokeStyle = this.activePlayer.color;
+            ctx.fillText(this.activePlayer.name, 700, 420);
+            ctx.strokeText(this.activePlayer.name, 700, 420);
+            
+            ctx.fillStyle = this.user.color
+            ctx.fillRect(135,408,100,15)
+            let n = 0
+            ctx.textAlign = "center"
+            this.playerOrder.forEach( ( player, i ) => {
+                if ( player !== this.user ) {
+                    ctx.fillStyle = player.color
+                    ctx.fillRect((675 - (n * 45)), 440, 30, 20)
+                    ctx.fillStyle = player.textColor
+                    ctx.fillText(this.scores[i], 690 - (n * 45), 455)
+                    n += 1
+                }
+            })
         }
     }
 
@@ -179,7 +197,7 @@ class pig {
     play(){
         this.rollBtn = new rectButton(this.canv, () => {
             if ( this.user === this.currentPlayer ) {
-                this.turn();
+                this.rollEvent();
             }}, {
             name: "roll",
             x: 150,
@@ -192,7 +210,7 @@ class pig {
         })
         this.holdBtn = new rectButton(this.canv, () => {
             if ( this.user === this.currentPlayer ) {
-                socket.broadcast.emit("hold")
+                socket.emit("hold")
                 this.endTurn();
             }
         }, {
@@ -253,10 +271,12 @@ class pig {
         this.scores = new Array(numPlayers).fill(0)
         this.playerOrder = shufflePlayerOrder(allPlayers)
         this.currentPlayer = this.playerOrder[this.currentPlayerIndex]
+        this.myIdx = this.user === this.currentPlayer ? 0 : 1;
     }
 
     setup(order) {
-        this.playerOrder = order.map( connection => {
+        this.playerOrder = order.map( ( connection, i) => {
+            if ( connection === socket.id ) this.myIdx = i;
             return connectedPlayers[connection]
         } )
         this.scores = new Array(this.playerOrder.length).fill(0)

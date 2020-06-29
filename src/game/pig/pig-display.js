@@ -11,7 +11,6 @@ const pigDisplay = (canv, ctx) => {
     const game = new pig(canv, ctx, [ thisPlayer ])
     game.preRender();
     if ( Object.keys(connectedPlayers).length !== 1 ) {
-        console.log(Object.getOwnPropertyNames(socket))
         socket.on("all ready", controllingPlayer => {
             if ( socket.id === controllingPlayer ) {
                 const order =  shuffleConnectedPlayers()
@@ -19,7 +18,6 @@ const pigDisplay = (canv, ctx) => {
             }
         })
         socket.on("player order", order => {
-            console.log("RECEIVED")
             game.setup(order)
         })
     }

@@ -63,6 +63,6 @@ setInterval( () => {
     }
 }, 100 )
 
-http.listen(3000, () => {
+http.listen($PORT, () => {
     
 })

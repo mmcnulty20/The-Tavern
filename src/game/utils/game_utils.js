@@ -1,3 +1,5 @@
+import { connectedPlayers } from "./server_utils";
+
 export const shufflePlayerOrder = (allPlayers) => {
     const order = [];
     while (allPlayers.length > 0) {
@@ -8,4 +10,9 @@ export const shufflePlayerOrder = (allPlayers) => {
         )
     }
     return order
+}
+
+export const shuffleConnectedPlayers = () => {
+    const allPlayers = Object.keys(connectedPlayers)
+    return shufflePlayerOrder(allPlayers)
 }

@@ -2,10 +2,9 @@ import welcomeScreen from "./welcomeScreen";
 import { modal } from "./utils/canvas_utils";
 
 const chooseName = (canv, ctx) => {
-    if (!sessionStorage.getItem("player")) {
+    if ( !sessionStorage.getItem("player") ) {
         modal(ctx)
-        
-        // Replace with pixel-drawn box eventually
+
         ctx.beginPath();
         ctx.rect(150,200,500,100);
         ctx.fillStyle = "antiquewhite";

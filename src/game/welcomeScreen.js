@@ -3,7 +3,6 @@ import chooseGame from "./choose_game";
 const welcomeScreen = (canv, ctx) => {
     clearWithHUD(canv, ctx);
     modal(ctx)
-    
     ctx.textAlign = "center"
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "14px Georgia";
@@ -13,6 +12,7 @@ const welcomeScreen = (canv, ctx) => {
     
     ctx.font = "18px Georgia"
     ctx.fillText("Click to Enter", 400, 280)
+    
 
     canv.addEventListener("click", settingExplanation(canv, ctx), {once: true} )
     

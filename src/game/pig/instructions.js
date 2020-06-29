@@ -1,5 +1,6 @@
 import { modal, rectButton, clearWithHUD } from "../utils/canvas_utils"
 import pig from "./pig-display";
+// import { socket } from "../../../server";
 
 const pigInstructions = (canv, ctx) => {
     clearWithHUD(canv, ctx);
@@ -15,7 +16,10 @@ const pigInstructions = (canv, ctx) => {
     ctx.textAlign = "center";
     ctx.fillText("How to Play Pig:", 400, 100)
 
-    const start = new rectButton(canv, () => pig(canv, ctx), {
+    const start = new rectButton(canv, () => {
+            socket.emit("ready")
+            pig(canv, ctx);
+        }, {
         name: "start-pig-btn",
         x: 325,
         y: 350,

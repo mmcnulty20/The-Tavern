@@ -8,9 +8,13 @@ const compiler = webpack(config);
 
 const app = express();
 const http = require("http").createServer(app);
-// var io = import("socket.io")(http)
+var io = require("socket.io")(http)
 
-console.log("server")
+const gameState = {
+    players: {},
+}
+let ready = 0
+let playerOrder;
 
 // app.use(express.static(path.join(__dirname, "public")));
 
@@ -23,13 +27,37 @@ app.use(webpackMiddleware( compiler,  {
 //     res.sendFile(__dirname + "/public/dist/index.html")
 // });
 
-// io.on("connection", socket => {
-//     console.log("user connected");
-//     socket.on("disconnect", () => {
-//         console.log("disconnected")
-//     })
-// })
+io.on("connection", localSocket => {
+    // socket = localSocket
+    localSocket.on("disconnect", () => {
+        delete gameState.players[localSocket.id]
+    })
+    localSocket.on("new player", ({name, color, textColor}) => {
+        gameState.players[localSocket.id] = { name, color, textColor } 
+    })
+    localSocket.on("ready", () => {
+        ready += 1
+    })
+    localSocket.on("shuffled order", order => {
+        playerOrder = order
+    })
+})
 
-app.listen(3000, () => {
+const numPlayers = () => Object.keys(gameState.players).length
+
+setInterval( () => {
+    io.sockets.emit("state", gameState);
+    if ( ready === numPlayers() ) {
+        const controllingPlayer = Object.keys(gameState.players)[( Math.floor(Math.random() * numPlayers() ))]
+        io.sockets.emit("all ready", controllingPlayer);
+        ready = 0;
+    }
+    if ( playerOrder ) {
+        io.sockets.emit("player order", playerOrder)
+        playerOrder = null
+    }
+}, 100 )
+
+http.listen(3000, () => {
     console.log("listening on *:3000")
 })

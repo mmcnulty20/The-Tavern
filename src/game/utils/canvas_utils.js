@@ -1,8 +1,12 @@
 import HUD from "../hud";
-import Player from "../player/humanPlayer";
+import { connectedPlayers } from "./server_utils";
 let playerHUD 
 
-export let thisPlayer;
+export let thisPlayer
+
+const settingNewPlayer = player => {
+    thisPlayer = thisPlayer || connectedPlayers[player]
+}
 
 export const modal = ctx => {
     ctx.fillStyle = "rgba(0,0,0,0.7)"
@@ -10,11 +14,11 @@ export const modal = ctx => {
     //cover background with darker box, emphasizing foreground menu
 }
 
-export const clearWithHUD = (canv, ctx, player) => {
+export const clearWithHUD = (canv, ctx) => {
     ctx.clearRect(0, 0, 800, 500);
-    thisPlayer = thisPlayer || new Player(JSON.parse(sessionStorage.getItem("player")))
+    if (!thisPlayer) settingNewPlayer(sessionStorage.getItem("player"));
     playerHUD = playerHUD || new HUD(canv, thisPlayer, 2)
-    playerHUD.render(player)
+    playerHUD.render()
 }
 
 export class rectButton {
@@ -38,7 +42,6 @@ export class rectButton {
         this.textColor = textColor || "black";
         
         this.clicked = this.clicked.bind(this)
-        console.log(this)
     }
 
     render(bgColorChange){

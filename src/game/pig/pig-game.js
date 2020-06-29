@@ -6,29 +6,29 @@ import five from "../../../resources/pixel_assets/dice/5.png";
 import six from "../../../resources/pixel_assets/dice/6.png";
 import { shufflePlayerOrder } from "../utils/game_utils"
 import pigAi from "../player/pigAi";
-import { clearWithHUD, rectButton } from "../utils/canvas_utils";
+import { clearWithHUD, rectButton, thisPlayer } from "../utils/canvas_utils";
 import { loadImages, imagesStore } from "../utils/loading_utils";
+import { connectedPlayers } from "../utils/server_utils";
+// import { socket } from "../../../server";
 
 class pig {
-    constructor( canv, ctx, allPlayers ) {
-        if ( allPlayers.length === 1 ) {
-            allPlayers.push(new pigAi())
-        }
-        this.numPlayers = allPlayers.length;
-        this.playerOrder = shufflePlayerOrder(allPlayers)
+    constructor( canv, ctx ) {
         this.currentPlayerIndex = 0;
-        this.currentPlayer = this.playerOrder[this.currentPlayerIndex]
 
         this.canv = canv;
         this.ctx = ctx;
 
-        this.user = JSON.parse(sessionStorage.getItem("player")).name;
-        this.user = this.playerOrder.find( player => player.name === this.user)
-        this.scores = new Array(this.numPlayers).fill(0);
+        this.user = thisPlayer
 
         this.numRolls = 0;
         this.tempScore = 0;
+
+        socket.on("hold", () => this.endTurn());
+        socket.on("roll", roll => {
+            this.turn(roll)
+        })
     }
+    
 
     switchPlayers(){
         this.currentPlayerIndex = 
@@ -84,9 +84,19 @@ class pig {
         this.endTurn(1)
     }
 
-    turn(){
+    turn(roll){
         this.numRolls += 1;
-        const roll = this.roll()
+        if (!roll) {
+            roll = this.roll()
+            // console.log(this.socket)
+            // console.log(this.socket.broadcast)
+            // debugger
+            console.log(socket)
+            console.log(Object.getOwnPropertyNames(socket.io))
+            
+            // io.sockets.sockets[socket.id].broadcast.emit("roll", roll)
+            // this.socket.broadcast.emit("roll", roll)
+        }
         if (roll === 1) {
             this.handleOne();
         } else {
@@ -106,7 +116,7 @@ class pig {
         }, 750 )
     }
 
-    render(result, winner){
+    render(result, winner, holding = false){
         const ctx = this.ctx;
         clearWithHUD(this.canv, ctx);
         
@@ -129,11 +139,15 @@ class pig {
         if ( this.currentPlayer !== null ) {
             this.lastRoll = this.face(result)
         }
-
-        this.rollBtn.render(this.btnColor());
-        this.holdBtn.render(this.btnColor())
+        if ( holding ) {
+            this.rollBtn.render("grey");
+            this.holdBtn.render("grey");
+        } else {
+            this.rollBtn.render(this.btnColor());
+            this.holdBtn.render(this.btnColor());
+        }
         ctx.beginPath();
-        if (result || this.currentPlayer === null) {
+        if ( ( result || this.currentPlayer === null ) && !holding ) {
             let face = this.face(result) || this.lastRoll;
             if ( imagesStore[face] ) {
                 this.diceRender(imagesStore[face])
@@ -147,6 +161,8 @@ class pig {
         ctx.lineWidth = 1
         if ( winner ) {
             ctx.fillText(`${winner.name} wins!!`, 400, 425)
+        } else if ( holding ) {
+            ctx.fillText(`Waiting for all players to join`, 400, 425);
         } else {
             ctx.fillText(`Current: ${this.tempScore}`, 400, 400)
             ctx.fillText(`Your total: ${ this.scores[this.currentPlayerIndex] }`, 400, 425)
@@ -164,8 +180,7 @@ class pig {
         this.rollBtn = new rectButton(this.canv, () => {
             if ( this.user === this.currentPlayer ) {
                 this.turn();
-            } else { console.log("not your turn") }
-        }, {
+            }}, {
             name: "roll",
             x: 150,
             y: 172.5,
@@ -177,8 +192,9 @@ class pig {
         })
         this.holdBtn = new rectButton(this.canv, () => {
             if ( this.user === this.currentPlayer ) {
+                socket.broadcast.emit("hold")
                 this.endTurn();
-            } else { console.log("not your turn") }
+            }
         }, {
             name: "hold",
             x: 150,
@@ -198,6 +214,56 @@ class pig {
 
     }
 
+    preRender(){
+        this.rollBtn = new rectButton(this.canv, () => {}, {
+            name: "roll",
+            x: 150,
+            y: 172.5,
+            w: 130,
+            h: 40,
+            buttonText: "ROLL",
+            textColor: "white",
+            font: "20px Georgia"
+        })
+        this.holdBtn = new rectButton(this.canv, () => {}, {
+            name: "hold",
+            x: 150,
+            y: 222.5,
+            w: 130,
+            h: 40,
+            buttonText: "HOLD",
+            textColor: "white",
+            font: "20px Georgia"
+        })
+
+        const allPlayers = Object.values(connectedPlayers)
+
+        
+        if ( allPlayers.length === 1 ) {
+            allPlayers.push(new pigAi())
+            this.shuffleToBegin(allPlayers);
+            this.play();
+        } else {
+            this.render(null,null,true);
+        }   
+    }
+
+    shuffleToBegin(allPlayers){
+        const numPlayers = allPlayers.length;
+        this.scores = new Array(numPlayers).fill(0)
+        this.playerOrder = shufflePlayerOrder(allPlayers)
+        this.currentPlayer = this.playerOrder[this.currentPlayerIndex]
+    }
+
+    setup(order) {
+        this.playerOrder = order.map( connection => {
+            return connectedPlayers[connection]
+        } )
+        this.scores = new Array(this.playerOrder.length).fill(0)
+        this.currentPlayer = this.playerOrder[0]
+        this.play()
+    }
+
     playTurn(){
         if ( !this.gameOver() ) {
             if ( this.currentPlayer instanceof pigAi ) {
@@ -210,18 +276,13 @@ class pig {
 
     win(){
         const idx = this.scores.findIndex( score => score >= 100 )
-        console.log(idx)
         const winner = this.playerOrder[idx]
-        console.log(winner)
         this.currentPlayer === null
         this.render(undefined, winner)
     }
 
     gameOver(){
-        console.log(this.scores)
         const test = this.scores.find( score => score >= 100 )
-        console.log(test)
-        console.log(!!test)
         return !!test
     }
 

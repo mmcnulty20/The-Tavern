@@ -1,0 +1,55 @@
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 40px;
+    width: 100%;
+    max-width: 1300px;
+    padding: 0 15px 15px;
+    .right {
+        font-size: 33px;
+        margin-right: 20px;
+        button {
+            margin-right: 8px;
+        }
+    }
+    .left {
+        margin-left: 10px;
+        a {
+            margin-left: 8px;
+        }
+    }
+    button, a {
+        &:hover {
+            cursor: pointer;
+            color: antiquewhite;
+            transition: color 0.2s;
+        }
+
+    }
+    #credits {
+        display: none;
+    }
+    #credit-btn:hover {
+        position: relative;
+        transition: unset;
+        & > #credits {
+            display: block;
+            position: absolute;
+            bottom: 45px;
+            right: -80px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-variant: normal;
+            font-size: 12px;
+            width: 300px;
+            background-color: antiquewhite;
+            color: black;
+            height: 100px;
+            padding: 20px;
+            a:hover {
+                color: slateblue;
+            }
+        }
+
+    }
+}

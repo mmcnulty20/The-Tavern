@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://kit.fontawesome.com/923b453b39.js" crossorigin="anonymous"></script>
 <script>
   var socket = io();
 </script>
@@ -71,9 +72,27 @@
         <canvas id="game" width="800" height="500" style="border: 1px solid black;"></canvas>
     </div>
     <footer>
-        <a href="https://github.com/mmcnulty20/The-Tavern">[github icon]</a>
-        <a href="#">[linkedin]</a>
-        <a href="#">[share (ideally with server-code copied)]</a>
+        <section class="left">
+            <a href="https://github.com/mmcnulty20/The-Tavern"><i class="fab fa-github-square"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </section>
+        <section class="right">
+            <audio id="audio" loop src="https://sounds.tabletopaudio.com/23_The_Slaughtered_Ox.mp3"></audio>
+            <div id="controls">
+                <button id="mute">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button id="pause">
+                    <i class="fas fa-play-circle"></i>
+                </button>
+                <button id="credit-btn">
+                    <i class="far fa-question-circle"></i>
+                    <div id="credits">
+                        Music/atmosphere credit goes to Tim at <a href="https://tabletopaudio.com/">TableTopAudio</a> and is used under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License
+                    </div>
+                </button>
+            </div>
+        </section>
     </footer>
 </body>
 </html>

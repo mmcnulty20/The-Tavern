@@ -5,6 +5,7 @@ import setup from "../game/baseSetup";
 const joinGame = () => {
     const joinBtn = document.getElementById("join");
     const modal = document.getElementById("new-player-modal")
+    const form = document.getElementById("form-cont")
 
     const nameInput = document.getElementById("name");
     const colorInput = document.getElementById("color");
@@ -13,7 +14,13 @@ const joinGame = () => {
     const submitBtn = document.getElementById("player-submit");
 
     joinBtn.addEventListener("click", () => {
-        modal.className = modal.className ? "" : "hidden"
+        modal.classList.toggle("hidden")
+    })
+    modal.addEventListener("click", () => {
+        modal.classList.toggle("hidden")
+    })
+    form.addEventListener("click", e => {
+        e.stopPropagation();
     })
 
     let currentName = "";
@@ -21,17 +28,30 @@ const joinGame = () => {
     let textColor = "#2c2330";
 
     nameInput.addEventListener("input", e => {
-        currentName = e.target.value;
-        demo.innerHTML = `<span>${ currentName }</span>`
+        const val = e.target.value
+        if ( val.length < 29 ) {
+            currentName = e.target.value;
+            demo.innerHTML = `<span>${ currentName }</span>`
+            nameInput.classList.remove("too-many")
+        } else {
+            e.target.value = currentName;
+            nameInput.classList.add("too-many")
+            if (val !== currentName) {
+                nameInput.classList.add("shake")
+                setTimeout(() => {nameInput.classList.remove("shake")}, 300)
+            }
+        }
     })
-
+    
     colorInput.addEventListener("change", e => {
         color = e.target.value;
+        // submitBtn.style = `color: ${ textColor }; background: ${ color }`
         demo.style = `color: ${ textColor }; background: ${ color }`
     })
-
+    
     textColorInput.addEventListener("change", e => {
         textColor = e.target.value;
+        // submitBtn.style = `color: ${ textColor }; background: ${ color }`
         demo.style = `color: ${ textColor }; background: ${ color }`
     })
 

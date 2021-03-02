@@ -1,6 +1,18 @@
 @import "./reset.scss";
 @import "./header.scss";
+@import "./main.scss";
 
 #game {
     background-image: url("../../resources/pixel_assets/general/bg.png");
+}
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    background-color: #a28070;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }

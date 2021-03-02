@@ -57,6 +57,7 @@ const joinGame = () => {
 
     submitBtn.addEventListener("click", e => {
         e.preventDefault();
+        modal.classList.add("hidden")
         if (!sessionStorage.getItem("player")) {
             socket.emit("new player", { name: currentName, color, textColor })
             setTimeout( () => {

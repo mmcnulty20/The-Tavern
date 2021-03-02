@@ -12,54 +12,56 @@
 <body>
     
     <header>
-        <button id="join">
-            Join a Game
-        </button>
-        <div class="head-center">
-            The Tavern
-        </div>
-        <button id="start">
-            Start a Game
-        </button>
-        <div id="new-player-modal" class="hidden">
-            <svg width="400" height="300" id="pathvg" style="position: absolute; z-index: -1000">
-                <clipPath id="clipped" style="display:inline">
-                    <path
-                        d="M 366,280 H 400 V 20 H 366 V 0 h -332 V 20 H 0 V 280 h 34 v 350 v 20 h 332 z"
-                        id="paths" />
-                </clipPath>
-            </svg>
-            <div id="form-cont">
-                <form id="player-form">
-                    <label>
-                        <!-- <span>Name:</span> -->
-                        Name:
-                        <input type="text" id="name" placeholder="Bellith Brighton">
-                        
-                    </label>
-                    <section id="colors">
+        <div>
+            <button id="join">
+                Join a Game
+            </button>
+            <div class="head-center">
+                The Tavern
+            </div>
+            <button id="start">
+                Start a Game
+            </button>
+            <div id="new-player-modal" class="hidden">
+                <svg width="400" height="300" id="pathvg" style="position: absolute; z-index: -1000">
+                    <clipPath id="clipped" style="display:inline">
+                        <path
+                            d="M 366,280 H 400 V 20 H 366 V 0 h -332 V 20 H 0 V 280 h 34 v 350 v 20 h 332 z"
+                            id="paths" />
+                    </clipPath>
+                </svg>
+                <div id="form-cont">
+                    <form id="player-form">
                         <label>
-                            <!-- <span>Color: </span> -->
-                            Color
-                            <input type="color" id="color" value="#aa80c2">
+                            <!-- <span>Name:</span> -->
+                            Name:
+                            <input type="text" id="name" placeholder="Bellith Brighton">
+                            
                         </label>
-                        <label>
-                            <!-- <span>Text Color: </span> -->
-                            Text Color
-                            <input id="text-color" type="color" value="#2c2330">
-                        </label>
-                    </section>
-                    <section>
-                        <div id="demo">
-                            <span>
-                                Bellith Brighton
-                            </span>
-                        </div>
-                    </section>
-                    <button id="player-submit">
-                        Join
-                    </button>
-                </form>
+                        <section id="colors">
+                            <label>
+                                <!-- <span>Color: </span> -->
+                                Color
+                                <input type="color" id="color" value="#aa80c2">
+                            </label>
+                            <label>
+                                <!-- <span>Text Color: </span> -->
+                                Text Color
+                                <input id="text-color" type="color" value="#2c2330">
+                            </label>
+                        </section>
+                        <section>
+                            <div id="demo">
+                                <span>
+                                    Bellith Brighton
+                                </span>
+                            </div>
+                        </section>
+                        <button id="player-submit">
+                            Join
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </header>
@@ -71,11 +73,5 @@
         <a href="#">[linkedin]</a>
         <a href="#">[share (ideally with server-code copied)]</a>
     </footer>
-
-
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
 </body>
 </html>

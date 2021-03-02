@@ -16,6 +16,7 @@ header {
             }
             &#start:hover {
                 position: relative;
+                color: rgb(160, 53, 53);
                 cursor: not-allowed;
                 &::after {
                     position: absolute;
@@ -40,7 +41,6 @@ header {
             &:not(.hidden) {
                 display: flex;
                 justify-content: center;
-                // align-items: center;
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -55,7 +55,7 @@ $form-width: 400px;
 $lr-pad: 40px;
 #form-cont {
     clip-path: url("#clipped");
-    margin-top: 100px;
+    margin-top: calc(50vh - 150px - ( ( 50vh - 150px - 96px ) / 2 ) );
     background: antiquewhite;
     padding: 50px $lr-pad;
     width: $form-width;
@@ -173,5 +173,24 @@ $lr-pad: 40px;
         cursor: pointer;
         background-color: #ae9db8;
         transition: background-color 0.2s;
+    }
+}
+
+.head-center {
+    position: relative;
+    top: 5px;
+    box-sizing: content-box;
+    height: fit-content;
+    padding: 15px 0 20px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 35px;
+    background-image: url("../../resources/die.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: default;
+    strong {
+        font-size: 55px;
     }
 }

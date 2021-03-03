@@ -7,14 +7,14 @@ class HUD {
         this.canv = canv;
         this.ctx = canv.getContext("2d");
 
-        this.menu = new rectButton(canv, () => alert("menu opened!"), {
+        this.menu = new rectButton(canv, () => {}, {
             name: "menu",
             x: 750,
             y: 5,
             w: 30,
             h: 25,
             fill: "#ffffff7e",
-            buttonText: "☰",
+            buttonText: "",
             textColor: "black"
         })
     }
@@ -37,8 +37,9 @@ class HUD {
         
         ctx.fillRect(262.5,10,275,30);
 
-        ctx.fillStyle = this.player.color
-        ctx.fillRect(267.5, 15, ( this.player.percent() * 265 ), 20);
+        ctx.fillStyle = this.player.percent() > .3 ? this.player.color : "#851b1b"
+        const percent = this.player.percent() <= 0 ? 0 : this.player.percent() * 265
+        ctx.fillRect(267.5, 15, percent, 20);
 
         ctx.fillStyle = "#ffffff7e";
         ctx.fillRect(675,5,60,25)

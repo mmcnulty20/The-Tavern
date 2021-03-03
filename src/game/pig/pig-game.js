@@ -9,6 +9,7 @@ import pigAi from "../player/pigAi";
 import { clearWithHUD, rectButton, thisPlayer } from "../utils/canvas_utils";
 import { loadImages, imagesStore } from "../utils/loading_utils";
 import { connectedPlayers } from "../utils/server_utils";
+import pigDisplay from "./pig-display";
 
 class pig {
     constructor( canv, ctx ) {
@@ -112,7 +113,7 @@ class pig {
         }, 750 )
     }
 
-    render(result, winner, holding = false){
+    render(result, holding = false){
         const ctx = this.ctx;
         clearWithHUD(this.canv, ctx);
         
@@ -156,8 +157,24 @@ class pig {
         }
         this.ctx.closePath();
         ctx.lineWidth = 1
-        if ( winner ) {
-            ctx.fillText(`${winner.name} wins!`, 400, 425)
+        if ( this.winner ) {
+            ctx.fillText(`${this.winner.name} wins!`, 400, 400)
+            const restart = new rectButton(this.canv, () => {
+                this.user.fullHeal();
+                socket.emit("ready")
+                pigDisplay(this.canv, this.ctx);
+            }, {
+                name: "restart",
+                x: 350,
+                y: 410,
+                w: 100,
+                h: 40,
+                fill: this.winner.color,
+                buttonText: "Play Again?",
+                textColor: this.winner.textColor
+            })
+            restart.render()
+            this.canv.addEventListener("click", restart.clicked, {once: true})
         } else if ( holding ) {
             ctx.fillText(`Waiting for all players to join`, 400, 425);
         } else {
@@ -262,7 +279,7 @@ class pig {
             this.shuffleToBegin(allPlayers);
             this.play();
         } else {
-            this.render(null,null,true);
+            this.render(null,true);
         }   
     }
 
@@ -295,14 +312,20 @@ class pig {
     }
 
     win(){
-        const idx = this.scores.findIndex( score => score >= 100 )
-        const winner = this.playerOrder[idx]
-        this.currentPlayer === null
-        this.render(undefined, winner)
+        const oppPlayer = this.playerOrder[Math.abs(this.currentPlayerIndex - 1)]
+        if (this.currentPlayer.health > 0 && oppPlayer.health > 0) {
+            const idx = this.scores.findIndex( score => score >= 100 )
+            this.winner = this.playerOrder[idx]
+        } else {
+            this.winner = this.currentPlayer.health > 0 ?
+                this.currentPlayer : oppPlayer
+        }
+        this.currentPlayer = null
+        this.render(undefined)
     }
 
     gameOver(){
-        const test = this.scores.find( score => score >= 100 )
+        const test = this.scores.find(score => score >= 100) || this.playerOrder.map(e => e.health).find(e => e <= 0)
         return !!test
     }
 

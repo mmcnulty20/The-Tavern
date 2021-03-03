@@ -1,10 +1,15 @@
+const maxHealth = 50
 class Player {
-    constructor({ color, name = "anonymous", health = 100, textColor }) {
+    constructor({ color, name = "anonymous", health = maxHealth, textColor }) {
         this.color = color;
         this.name = name;
         this.health = health;
         this.points = 0;
         this.textColor = textColor;
+    }
+
+    fullHeal(){
+        this.health = maxHealth
     }
 
     earnPoints(numPoints) {
@@ -17,7 +22,7 @@ class Player {
     }
 
     percent(){
-        return this.health / 100
+        return this.health / maxHealth
     }
 }
 

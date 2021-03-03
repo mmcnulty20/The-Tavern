@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./src/styles/index.scss"],"names":[],"mappings":"AAAA,MAAM","file":"main.css","sourcesContent":["#game{background-image:url(pixel_assets/bg.png)}\n"],"sourceRoot":""}

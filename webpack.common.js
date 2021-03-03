@@ -43,7 +43,7 @@ module: {
         ]
     },
     {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|ico)$/i,
         use: [
         {
             loader: "file-loader",
@@ -87,6 +87,7 @@ plugins: [
     new HtmlWebpackPlugin({
         title: 'The Tavern',
         template: "dist/base.html",
+        favicon: "resources/mug.ico"
       }),
     require("autoprefixer")
 ]

@@ -9,10 +9,16 @@ header {
         & > button {
             margin: 10px;
             padding: 10px;
-            &#join:hover {
-                cursor: pointer;
-                color: antiquewhite;
-                transition: color 0.3s;
+            &#join {
+                &:hover:not(.joined) {
+                    cursor: pointer;
+                    color: antiquewhite;
+                    transition: color 0.3s;
+                }
+                &.joined {
+                    cursor: default;
+                    color: $body-color;
+                }
             }
             &#start:hover {
                 position: relative;

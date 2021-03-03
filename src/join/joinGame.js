@@ -14,7 +14,7 @@ const joinGame = () => {
     const submitBtn = document.getElementById("player-submit");
 
     joinBtn.addEventListener("click", () => {
-        modal.classList.toggle("hidden")
+        if (!sessionStorage.getItem("player")) modal.classList.toggle("hidden")
     })
     modal.addEventListener("click", () => {
         modal.classList.toggle("hidden")
@@ -26,11 +26,12 @@ const joinGame = () => {
     let currentName = "";
     let color = "#aa80c2";
     let textColor = "#2c2330";
+    demo.style = `color: ${textColor}; background: ${color}`
 
     nameInput.addEventListener("input", e => {
         const val = e.target.value
-        if ( val.length < 29 ) {
-            currentName = e.target.value;
+        if ( val.length < 29 && currentName !== val && ( val.length > 0 || currentName.length > 0)) {
+            currentName = val;
             demo.innerHTML = `<span>${ currentName }</span>`
             nameInput.classList.remove("too-many")
         } else {
@@ -45,25 +46,28 @@ const joinGame = () => {
     
     colorInput.addEventListener("change", e => {
         color = e.target.value;
-        // submitBtn.style = `color: ${ textColor }; background: ${ color }`
         demo.style = `color: ${ textColor }; background: ${ color }`
     })
     
     textColorInput.addEventListener("change", e => {
         textColor = e.target.value;
-        // submitBtn.style = `color: ${ textColor }; background: ${ color }`
         demo.style = `color: ${ textColor }; background: ${ color }`
     })
 
     submitBtn.addEventListener("click", e => {
         e.preventDefault();
-        modal.classList.add("hidden")
-        if (!sessionStorage.getItem("player")) {
-            socket.emit("new player", { name: currentName, color, textColor })
-            setTimeout( () => {
-                sessionStorage.setItem("player", socket.id)
-                setup();
-            }, 500 )
+        if (currentName.length > 0) {
+            modal.classList.add("hidden")
+            if (!sessionStorage.getItem("player")) {
+                joinBtn.classList.add("joined")
+                socket.emit("new player", { name: currentName, color, textColor })
+                setTimeout( () => {
+                    sessionStorage.setItem("player", socket.id)
+                    setup();
+                }, 500 )
+            }
+        } else {
+            nameInput.classList.add("too-many", "shake")
         }
     })
 }

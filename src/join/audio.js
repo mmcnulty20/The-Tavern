@@ -6,7 +6,6 @@ export default () => {
     const pause = document.getElementById("pause")
     const controls = document.getElementById("controls")
     const cb = (e) => {
-        console.log(audio)
         audio.play()
         pause.innerHTML = `<i class="fas fa-pause-circle"></i>`
         types.forEach(e => {
